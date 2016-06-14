@@ -1,0 +1,54 @@
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<h1>Inventory Page</h1>
+<form action="/itInventory/">
+    <input type="submit" value="Home">
+</form>
+<br>
+<table>
+    <th>Current Inventory</th>
+    <tr>
+        <td>Item ID</td>
+        <td>Machine</td>
+        <td>Room</td>
+        <td>MAC Address</td>
+        <td>IP Address</td>
+        <td>VLAN</td>
+        <td>Manufacturer</td>
+        <td>Model</td>
+        <td>Serial</td>
+        <td>User</td>
+        <td>OS</td>
+        <td>Department</td>
+        <td>Sponsor</td>
+        <td>Notes</td>
+    </tr>
+{% for item in a %}
+    <tr>
+        <td><a href="/itInventory/itemDetail/{{ item.id }}">{{ item.id }}</a></td>
+        <td>{{ item.machine }}</td>
+        <td>{{ item.room }}</td>
+        <td>{{ item.mac }}</td>
+        <td>{{ item.ip }}</td>
+        <td>{{ item.vlan }}</td>
+        <td>{{ item.manufacturer }}</td>
+        <td>{{ item.model }}</td>
+        <td>{{ item.serial }}</td>
+        <td>{{ item.user }}</td>
+        <td>{{ item.os }}</td>
+        <td>{{ item.department }}</td>
+        <td>{{ item.sponsor }}</td>
+        <td>{{ item.notes }}</td>
+    </tr>
+{% endfor %}
+</table>
+<br>
+
+
