@@ -89,5 +89,3 @@ APPEND_SLASH=True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
-
-MEDIA_URL='/home/stein/PycharmProjects/untitled1/itInventory/static/itInventory/images/'

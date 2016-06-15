@@ -1,7 +1,7 @@
-import datetime
+
 
 from django.db import models
-from django.utils import timezone
+
 
 class inventory(models.Model):
     machine = models.CharField(max_length=100, default="Not Specified")

@@ -11,6 +11,9 @@
     }
 
 </style>
+
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.js"></script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -19,6 +22,7 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
 <div class="page-header" style="position: relative;">
     <title>EBB IT Inventory</title>
     <nav class="navbar navbar-default" style="top: -30px; ">
@@ -55,24 +59,69 @@
                 <h1>Search Item</h1>
             </nav>
             <form action="/itInventory/searchItem/" method="post" role="search" style="width: 100%">
-                    {% csrf_token %}
-                    {{ form.non_field_errors }}
-                    <div class="dropdown" style="text-align: right">
-                        {{ form.search }}
-                        {% for field in form.choices %}
-                            {{ field.tag }}{{ field }}
-                        {% endfor %}
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="dropdown" style="text-align: right">
+                    {{ form.search }}
+                    {% for field in form.choices %}
+                        {{ field.tag }}{{ field }}
+                    {% endfor %}
                     <button type="submit" class="btn btn-default glyphicon glyphicon-search" style="align"></button>
                     {% if form.search.errors %}
                         <div class="alert alert-danger" role="alert" style="color: red; width: 300px" align="left" ><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only">Error:</span>{{ form.search.errors | striptags }}</div>
                     {% endif %}
-                            {% if form.choices.errors %}
+                    {% if form.choices.errors %}
                         <div class="alert alert-danger" role="alert" style="color: red; width: 300px" align="left"><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                             <span class="sr-only">Error:</span>{{ form.choices.errors | striptags }}</div>
                     {% endif %}
-                    </div>
-                </form>
+                </div>
+            </form>
+            <div class="col-sm-12" align="center">
+                <nav>
+                    <ul class="pagination">
+                        <li>
+                            {% if a.has_previous %}
+                                <a href="?page={{ a.previous_page_number }}" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            {% endif %}
+                        </li>
+                        {% for i in a.paginator.page_range %}
+                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endfor %}
+                        <li>
+                            {% if a.has_next %}
+                                <a href="?page={{ a.next_page_number }}" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            {% endif %}
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-sm-12">
+                <table class="table" id="inventory">
+                    <tr>
+                        <td>Item ID</td>
+                        <td>Machine</td>
+                        <td>Serial</td>
+                        <td>User</td>
+                        <td>Department</td>
+                    </tr>
+                    {% for item in a %}
+                        <tr>
+                            <td><a href="/itInventory/itemDetail/{{ item.id }}">{{ item.id }}</a></td>
+                            <td>{{ item.machine }}</td>
+                            <td>{{ item.serial }}</td>
+                            <td>{{ item.user }}</td>
+                            <td>{{ item.department }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
         </div>
+
     </div>
+
 </div>

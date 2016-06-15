@@ -1,10 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, loader, render_to_response
+from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from .forms import itemForm, searchForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import inventory
 from django.core.exceptions import ObjectDoesNotExist
-import urllib
-from urlparse import urlparse
+from urllib.parse import urlencode
+
 
 def index(request):
     request.session['view']= False
@@ -22,7 +23,7 @@ def index(request):
     if request.method == 'POST':
         form = searchForm(request.POST)
         if form.is_valid():
-            data = urllib.urlencode(form.cleaned_data)
+            data = urlencode(form.cleaned_data)
             url = '/itInventory/queryInventory/?' + data
             return HttpResponseRedirect(url)
         else:
@@ -144,20 +145,33 @@ def process(search, choices):
             raise ObjectDoesNotExist
 
 def searchItem(request):
+    #paginator
+    a = inventory.objects.all()
+    paginator = Paginator(a, 15)  # Show 25 contacts per page
+    page = request.GET.get('page')
+    try:
+        c = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        c = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        c = paginator.page(paginator.num_pages)
+
     init_form = searchForm()
     if request.method == 'POST':
         form = searchForm(request.POST)
         if form.is_valid():
-            data = urllib.urlencode(form.cleaned_data)
+            data = urlencode(form.cleaned_data)
             url = '/itInventory/queryInventory/?'+data
             return HttpResponseRedirect(url)
         else:
             form_errors = form.errors
-            return render(request, 'itInventory/searchItem.html', {'form': form, 'form_errors': form_errors})
+            return render(request, 'itInventory/searchItem.html', {'form': form, 'form_errors': form_errors, 'a': c, 'loop':paginator.num_pages})
     else:
         form = searchForm()
 
-    return render(request, "itInventory/searchItem.html", {'form': init_form})
+    return render(request, "itInventory/searchItem.html", {'form': init_form, 'a': c, 'loop':paginator.num_pages})
 
 def itemDetail(request, item_ID):
     a = inventory.objects.get(id=item_ID)
